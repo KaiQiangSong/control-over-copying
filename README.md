@@ -1,57 +1,106 @@
-# seq2seq-Transformer
-## Enviorment
+# Controlling the Amount of Verbatim Copying in Abstractive Summarization
 
-* Install Pytorch
+We provide the source code for the paper **"[Controlling the Amount of Verbatim Copying in Abstractive Summarization]()"**, accepted at AAAI'20. If you find the code useful, please cite the following paper. 
+
+    @inproceedings{control-over-copying:2020,
+     Author = {Kaiqiang Song and Logan Lebanoff and Qipeng Guo and Xipeng Qiu and Xiangyang Xue and Chen Li and Dong Yu and Fei Liu},
+     Title = {Joint Parsing and Generation for Abstractive Summarization},
+     Booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},
+     Year = {2020}}
+
+## Goal
+
+* Our system seeks to re-write a lengthy sentence, often the 1st sentence of a news article, to a concise, title-like summary. The average input and output lengths are 31 words and 8 words, respectively. 
+
+* The code takes as input a text file with one sentence per line. It generates a text file ("summary.txt") in the working folder as the outputs, where each source sentence is replaced by a title-like summary.
+
+* Example input and output are shown below. 
+  > Belgian authorities are investigating the killing of two policewomen and a passerby in the eastern city of Liege on Tuesday as a terror attack, the country's prosecutor said.
+
+  > Belgium probes killing of two policewomen as terror attack . 
+
+
+## Dependencies
+
+The code is written in Python (v3.7) and Pytorch (v1.3). We suggest the following environment:
+
+* A Linux machine (Ubuntu) with GPU
+* [Python (v3.7)](https://www.anaconda.com/download/)
+* [Pytorch (v1.3)](https://pytorch.org/)
+* [Pyrouge](https://pypi.org/project/pyrouge/)
+* [pytorch-pretrained-bert](https://github.com/huggingface/transformers)
+HINT: Notice that this repo may change their name and content during time. It is currently named as transformers.
+
+To install [Python (v3.7)](https://www.anaconda.com/download/), run the command:
 ```
-conda install pytorch torchvision cudatoolkit=10.0 -c pytorch
-```
-* Install pytorch-pretrained-bert
-```
-pip install spacy ftfy==4.4.3
-python -m spacy download en
-pip install pytorch-pretrained-bert
-```
-* Install pyrouge
-```
-pip install pyrouge
-```
-
-## Parameters
-
-### Searching
-```
-searching method: str (default BFS_BEAM)
-    BFS_BEAM: BFS Beam Searching method
-    AStar: AStar Beam Searching method
-
-beam_size: int (default 5)
-    beam size of the searching
-
-answer_size: int (default 5)
-    how many answers you want search at most
-
-gen_max_limit: int
-    limit for generated tokens/subwords  
-
-cands_limit: int (default 100,000)
-    For AStar searching only, the memory limit for the Splay Tree.
-
-gamma_value: float (default 14.0)
-    The \eta value for bi-Gram Trick
-
-similar_smoothing: bool (default False, action set True)
-    Whether use similar_smoothing or not
+$ wget https://repo.anaconda.com/archive/Anaconda3-2019.10-Linux-x86_64.sh
+$ bash Anaconda3-2019.10-Linux-x86_64.sh
+$ source ~/.bashrc
 ```
 
-### Reranking
+To install [PyTorch (v1.3)](https://pytorch.org/) and its dependencies, run the below command.
+```
+$ conda install pytorch torchvision cudatoolkit=10.1 -c pytorch
+```
 
+To install [pytorch-pretrained-bert](https://github.com/huggingface/transformers) and its dependencies, run the below command.
 ```
-reranking_method: str (default: smooth_bound_reward)
-    length_norm:
-    bp_norm:
-    bp_unigram_norm:
-    bp_bigram_norm:
-    bounded_word_reward:
-    bounded_adaptive_reward:
-    smooth_bound_reward:
+$ pip install spacy ftfy==4.4.3
+$ python -m spacy download en
+$ pip install pytorch-pretrained-bert
+``` 
+
+To install [Pyrouge](https://pypi.org/project/pyrouge/), run the command below. Pyrouge is a Python wrapper for the ROUGE toolkit, an automatic metric used for summary evaluation.  
 ```
+$ pip install pyrouge
+```
+
+## I Want to Generate Summaries..
+
+1. Clone this repo. Download this ZIP  file ([`others.zip`]()) containing vocabulary files and trained models. Move the ZIP file to the working folder and uncompress.
+    ```
+    $ git clone git@github.com:KaiQiangSong/control-over-copying.git
+    $ mv others.zip control-over-copying
+    $ cd control-over-copying
+    $ unzip others.zip
+    $ rm others.zip
+    $ mkdir log
+    ```
+
+2. Generating Summaries with our joint parsing and generating summarization model trained on selected dataset including: gigaword (default), newsroom, cnndm, websplit.
+    ```
+    $ python run.py --do_test --inputFile data/test.txt
+    ```
+    Or if you want runing models other than that trained on gigaword:
+    ```
+    $ python run.py --do_test --data newsroom --inputFile data/test.txt
+    ```
+   
+## I Want to Train the Model..
+1. Training the Model with train files and validation files.
+    ```
+    $ python run.py --do_train --train_prefix data/train --valid_prefix data/valid
+    ```
+
+2. (Optional) Modify the training options.
+    
+    You might want to change the parameters used for training. These are specified in `./setttings/training/gigaword_8.json` and explained blow.
+    
+```
+{
+	"stopConditions":
+	{
+		"max_epoch":12,
+		"earlyStopping":false,
+		"rateReduce_bound":200000
+	},
+	"checkingPoints":
+	{
+		"checkMin":0,
+		"checkFreq":2000,
+		"everyEpoch":true
+	}
+}
+```
+
+HINT*: 200K batches (used for `rateReduce_bound`) with batch size of `8`, is slightly less than half of an epoch.
