@@ -3,8 +3,8 @@
 We provide the source code for the paper **"[Controlling the Amount of Verbatim Copying in Abstractive Summarization]()"**, accepted at AAAI'20. If you find the code useful, please cite the following paper. 
 
     @inproceedings{control-over-copying:2020,
-     Author = {Kaiqiang Song and Logan Lebanoff and Qipeng Guo and Xipeng Qiu and Xiangyang Xue and Chen Li and Dong Yu and Fei Liu},
-     Title = {Joint Parsing and Generation for Abstractive Summarization},
+     Author = {Kaiqiang Song and Bingqing Wang and Zhe Feng and Liu Ren and Fei Liu},
+     Title = {Controlling the Amount of Verbatim Copying in Abstractive Summarization},
      Booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},
      Year = {2020}}
 
