@@ -29,7 +29,8 @@ The code is written in Python (v3.7) and Pytorch (v1.3). We suggest the followin
 * [Pytorch (v1.3)](https://pytorch.org/)
 * [Pyrouge](https://pypi.org/project/pyrouge/)
 * [pytorch-pretrained-bert](https://github.com/huggingface/transformers)
-HINT: Notice that this repo may change their name and content during time. It is currently named as transformers.
+
+HINT: Notice that [pytorch-pretrained-bert](https://github.com/huggingface/transformers) may change their name and content during time. It is currently named as transformers.
 
 To install [Python (v3.7)](https://www.anaconda.com/download/), run the command:
 ```
