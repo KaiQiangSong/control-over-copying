@@ -58,7 +58,7 @@ $ pip install pyrouge
 
 ## I Want to Generate Summaries..
 
-1. Clone this repo. Download this ZIP  file ([`others.zip`]()) containing trained model. Move the ZIP file to the working folder and uncompress.
+1. Clone this repo. Download this ZIP  file ([`others.zip`](http://i2u.world/kqsong/model/aaai2020_kaiqiang_2/others.zip)) containing trained model. Move the ZIP file to the working folder and uncompress.
     ```
     $ git clone git@github.com:KaiQiangSong/control-over-copying.git
     $ mv others.zip control-over-copying
